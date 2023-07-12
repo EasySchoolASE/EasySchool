@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override
@@ -9,6 +10,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController _nameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -44,10 +46,38 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
             SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 String name = _nameController.text;
                 String email = _emailController.text;
                 String password = _passwordController.text;
+
+                // Perform signup validation
+                if (name.isEmpty || email.isEmpty || password.isEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text('Error'),
+                        content: Text('Please fill in all fields.'),
+                        actions: [
+                          TextButton(
+                            child: Text('OK'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  return;
+                }
+
+                // Encrypt and store the password securely
+                await _secureStorage.write(key: 'password', value: password);
+
+                // Perform signup logic here
+                // For example, send a signup request to an API
 
                 print('Name: $name');
                 print('Email: $email');

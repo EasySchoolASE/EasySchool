@@ -12,4 +12,5 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
   FirebaseCorePluginCApiRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("FirebaseCorePluginCApi"));
 }
-// view courses
+// view courses 2.0
+

@@ -22,6 +22,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // string for displaying the error Message
   String? errorMessage;
+  String? loginDetials;
+  String? queryProcessing;
 
   @override
   Widget build(BuildContext context) {

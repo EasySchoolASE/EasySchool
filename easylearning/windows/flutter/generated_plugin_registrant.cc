@@ -18,3 +18,4 @@ void RegisterPlugins(flutter::PluginRegistry* registry) {
   UrlLauncherWindowsRegisterWithRegistrar(
       registry->GetRegistrarForPlugin("UrlLauncherWindows"));
 }
+// view courses

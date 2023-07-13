@@ -31,7 +31,24 @@ class MyApp extends StatelessWidget {
       home: isLoggedIn? const HomeScreen():  const LoginScreen(),
     );
   }
+}'
+
+@override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Easy School',
+      theme: ThemeData(
+        fontFamily: 'Quicksand',
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+      primary:  const Color.fromRGBO(59,107, 170, 1),
+    ),
+      ),
+      debugShowCheckedModeBanner: false,
+      home: isLoggedIn? const HomeScreen():  const LoginScreen(),
+    );
+  }
 }
+'
 
 
  @override

@@ -25,7 +25,8 @@ class CardWidget extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return 
+    Container(
       decoration: const material.BoxDecoration(
         boxShadow: [
           BoxShadow(
@@ -35,7 +36,8 @@ class CardWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: ClipPath(
+      child: 
+      ClipPath(
         clipper: ShapeBorderClipper(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),

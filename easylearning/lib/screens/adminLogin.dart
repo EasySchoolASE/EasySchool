@@ -1,32 +1,26 @@
-import 'package:easylearning/screens/adminLogin.dart';
-import 'package:easylearning/screens/registration_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:easylearning/screens/home_screen_admin.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
+import 'login_screens.dart';
 
-import 'home_screen.dart';
-
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class AdminLoginScreen extends StatefulWidget {
+  const AdminLoginScreen({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _LoginScreenState createState() => _LoginScreenState();
+  _AdminLoginScreenState createState() => _AdminLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _AdminLoginScreenState extends State<AdminLoginScreen> {
   // form key
   final _formKey = GlobalKey<FormState>();
 
   // editing controller
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-
-  // firebase
-  final _auth = FirebaseAuth.instance;
 
   // string for displaying the error Message
   String? errorMessage;
@@ -93,14 +87,22 @@ class _LoginScreenState extends State<LoginScreen> {
     final loginButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
-      color: const Color.fromRGBO(59, 107, 170, 1),
+      color:const Color.fromRGBO(59, 107, 170, 1),
       child: MaterialButton(
           padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () async {
-            final prefs = await SharedPreferences.getInstance();
+            final prefs=await SharedPreferences.getInstance();
             prefs.setBool('isLoggedIn', true);
-            logIn(emailController.text, passwordController.text);
+            prefs.setBool('adminLoggedIn', true);
+            if(emailController.text=="admin@gmail.com" && passwordController.text=="easylearning"){
+                Fluttertoast.showToast(msg: "Login Successful");
+                 // ignore: use_build_context_synchronously
+                 Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => const HomeScreenAdmin()));
+            }else{
+             Fluttertoast.showToast(msg: "Access Denied");
+            }
           },
           child: const Text(
             "Login",
@@ -112,15 +114,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0,),
       body: Center(
         child: SingleChildScrollView(
-            child: SafeArea(
-          maintainBottomViewPadding: true,
-          child: Container(
+          child: 
+          SafeArea(
+            maintainBottomViewPadding: true,
+            child:
+          Container(
             color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.all(36.0),
@@ -130,21 +131,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-
                   GradientText(
                     'Easy School',
                     style: GoogleFonts.rubikDirt(
-                          fontSize: 60, 
-                          fontWeight: FontWeight.w500, 
-                          color: Colors.white,
-                    ),
+                                        fontSize: 60, 
+                                        fontWeight: FontWeight.w500, 
+                                        color: Colors.white,
+                                  ),
                     textAlign: TextAlign.center,
                     colors: const [
                       Colors.blue,
                       Colors.indigo,
                     ]),
                     // const SizedBox(height: 25,),
-
                     SizedBox(
                         height: 150,
                         width: 150,
@@ -159,41 +158,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     const SizedBox(height: 35),
                     loginButton,
                     const SizedBox(height: 20),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          const Text("Don't have an account? ",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const RegistrationScreen()));
-                            },
-                            child: const Text(
-                              "Sign Up",
-                              style: TextStyle(
-                                  color:Color.fromRGBO(59, 107, 170, 1),
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15),
-                            ),
-                          )
-                        ]),
                       const SizedBox(height: 10,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          const Text("Are you the admin?",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
+                          const Text("Are you a Student?",style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500),),
                           GestureDetector(
                             onTap: () {
                               Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => const AdminLoginScreen()));
+                                  MaterialPageRoute(builder: (context) => const LoginScreen()));
                             },
                             child: const Text(
                               " Login",
                               style: TextStyle(
-                                  color: Color.fromRGBO(59, 107, 170, 1),
+                                  color:Color.fromRGBO(59, 107, 170, 1),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15),
                             ),
@@ -204,48 +182,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-        )),
+          )
+        ),
       ),
     );
-  }
-
-//  login function
-  void logIn(String email, String password) async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        await _auth
-            .signInWithEmailAndPassword(email: email, password: password)
-            .then((uid) => {
-                  Fluttertoast.showToast(msg: "Login Successful"),
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const HomeScreen())),
-                });
-      } on FirebaseAuthException catch (error) {
-        switch (error.code) {
-          case "invalid-email":
-            errorMessage = "Your email address appears to be malformed.";
-
-            break;
-          case "wrong-password":
-            errorMessage = "Your password is wrong.";
-            break;
-          case "user-not-found":
-            errorMessage = "User with this email doesn't exist.";
-            break;
-          case "user-disabled":
-            errorMessage = "User with this email has been disabled.";
-            break;
-          case "too-many-requests":
-            errorMessage = "Too many requests";
-            break;
-          case "operation-not-allowed":
-            errorMessage = "Signing in with Email and Password is not enabled.";
-            break;
-          default:
-            errorMessage = "An undefined Error happened.";
-        }
-        Fluttertoast.showToast(msg: errorMessage!);
-      }
-    }
   }
 }

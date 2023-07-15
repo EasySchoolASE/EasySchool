@@ -1,4 +1,5 @@
 import 'package:easylearning/screens/add_course.dart';
+import 'package:easylearning/screens/add_pdf.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/material.dart';
@@ -6,7 +7,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../screens/biology.dart';
 import '../../screens/chemistry.dart';
-import '../../screens/physics.dart';
 import 'card.dart';
 
 class TopBarAdmin extends StatefulWidget {
@@ -36,7 +36,7 @@ class _TopBarAdminState extends State<TopBarAdmin> {
   ];
   List pages = [
       const AddCoursePage(),
-      const Physics(),
+      const AddPdfPage(),
       const Chemistry(),
       const biology(),
     ];
@@ -124,18 +124,18 @@ class _TopBarAdminState extends State<TopBarAdmin> {
                                     // ignore: deprecated_member_use
                                     ? FontAwesomeIcons.add
                                     : index == 1
-                                        ? FontAwesomeIcons.brain
+                                        ? FontAwesomeIcons.solidFilePdf
                                         : index == 2
                                             ? FontAwesomeIcons.bookMedical
                                             : FontAwesomeIcons.bacteria),
                                             color:index ==0?const Color(0xFF2828FF):
-                                            index==1?const Color(0xFFFF2E2E):
+                                            index==1?Colors.red:
                                             index==2? const Color(0xFFFFD700):const Color(0xFF33FF33),),
                                 Text(index == 0
                                     ? "Add Video"
                                     : index == 1
-                                        ? "Physics"
-                                        : index == 2 ? "Chemistry" : "Biology",
+                                        ? "Add PDF"
+                                        : index == 2 ? "View Students" : "View Course Content",
                                         style: GoogleFonts.rubikDirt(
                                         fontSize: 20, 
                                         fontWeight: FontWeight.w500, 
@@ -161,7 +161,7 @@ class _TopBarAdminState extends State<TopBarAdmin> {
               )
               : Container(),
                 Container(
-                height: 700,
+                height: 850,
                 child:
                  pages[current],
                  ),

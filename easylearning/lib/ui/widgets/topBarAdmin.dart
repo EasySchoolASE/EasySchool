@@ -1,3 +1,4 @@
+import 'package:easylearning/screens/add_course.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/material.dart';
@@ -5,12 +6,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../screens/biology.dart';
 import '../../screens/chemistry.dart';
-import '../../screens/maths.dart';
 import '../../screens/physics.dart';
 import 'card.dart';
 
-class TopBar extends StatefulWidget {
-  const TopBar({
+class TopBarAdmin extends StatefulWidget {
+  const TopBarAdmin({
     Key? key,
     required this.controller,
     required this.expanded,
@@ -22,10 +22,10 @@ class TopBar extends StatefulWidget {
   final onMenuTap;
 
   @override
-  _TopBarState createState() => _TopBarState();
+  _TopBarAdminState createState() => _TopBarAdminState();
 }
 
-class _TopBarState extends State<TopBar> {
+class _TopBarAdminState extends State<TopBarAdmin> {
   int tab = 0;
   int current = 0;
   List<String> tabName = [
@@ -35,7 +35,7 @@ class _TopBarState extends State<TopBar> {
     "MY TOOLS",
   ];
   List pages = [
-      const MathsPage(),
+      const AddCoursePage(),
       const Physics(),
       const Chemistry(),
       const biology(),
@@ -43,16 +43,13 @@ class _TopBarState extends State<TopBar> {
   @override
   Widget build(BuildContext context) {
     return 
-    Container(
+      Column(
+      mainAxisSize: MainAxisSize.min,
+      children:[
+      Container(
       color: CupertinoColors.white,
       width: MediaQuery.of(context).size.width,
-      height: widget.expanded
-          ? MediaQuery.of(context).size.height * 0.70
-          : MediaQuery.of(context).size.height * 0.19,
       child: 
-      Column(
-        mainAxisSize: MainAxisSize.min,
-        children:[
           Padding(
             padding:
             EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.04),
@@ -62,7 +59,7 @@ class _TopBarState extends State<TopBar> {
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
-                    "Hi, User",
+                    "Hi, Admin",
                     style: TextStyle(
                         color: Color(0xFF343434),
                         fontSize: 24,
@@ -81,48 +78,10 @@ class _TopBarState extends State<TopBar> {
                 ),
               ],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: CupertinoTextField(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: material.Colors.white,
-                  boxShadow: const [
-                    BoxShadow(
-                      blurRadius: 25,
-                      offset: Offset(0, 10),
-                      color: Color(0x1A636363),
-                    ),
-                  ]),
-              padding: const EdgeInsets.all(10),
-              style: const TextStyle(
-                  color: Color(0xFF343434),
-                  fontSize: 18,
-                  fontFamily: 'Red Hat Display'),
-              enableInteractiveSelection: true,
-              controller: widget.controller,
-              expands: false,
-              keyboardType: TextInputType.text,
-              suffix: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: Icon(
-                  FontAwesomeIcons.magnifyingGlass,
-                  color: Color(0xFFADADAD),
-                ),
-              ),
-              textInputAction: TextInputAction.search,
-              textCapitalization: TextCapitalization.words,
-              placeholder: "Search",
-              placeholderStyle: const TextStyle(
-                  color: Color(0xFFADADAD),
-                  fontSize: 18,
-                  fontFamily: 'Red Hat Display'),
-            ),
-          ),
+          ),),
           widget.expanded
               ? 
-              Container(
+              SizedBox(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height * 0.20,
                   child: ListView.builder(
@@ -173,7 +132,7 @@ class _TopBarState extends State<TopBar> {
                                             index==1?const Color(0xFFFF2E2E):
                                             index==2? const Color(0xFFFFD700):const Color(0xFF33FF33),),
                                 Text(index == 0
-                                    ? "Maths"
+                                    ? "Add Video"
                                     : index == 1
                                         ? "Physics"
                                         : index == 2 ? "Chemistry" : "Biology",
@@ -182,6 +141,7 @@ class _TopBarState extends State<TopBar> {
                                         fontWeight: FontWeight.w500, 
                                         color: Colors.white,
                                   ),
+                                  textAlign: TextAlign.center,
                                 )
                               ],
                             ),
@@ -200,17 +160,11 @@ class _TopBarState extends State<TopBar> {
                   ),
               )
               : Container(),
-                // Visibility(
-                //       child: Center(
-                //         child: pages[current]),
-                //     ),
                 Container(
-                  height:  MediaQuery.of(context).size.height * 0.30,
-                  key: UniqueKey(),
-                  child: pages[current],
-                )
-        ],
-      ),
-    );
+                height: 700,
+                child:
+                 pages[current],
+                 ),
+        ]);
   }
 }

@@ -16,11 +16,13 @@ class _HomeScreenState extends State<HomeScreen> {
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
   bool isPressed = false;
+
   TextEditingController controller = TextEditingController();
  void onMenuTap() {
     setState(() {
     }
   );}
+
 
   @override
   void initState() {
@@ -45,6 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
           title: const Text("Welcome"),
           centerTitle: true,
         ),
+
+
         body: 
         Container(
         margin: const EdgeInsets.all(10),
@@ -169,3 +173,4 @@ class _HomeScreenState extends State<HomeScreen> {
 //     );
 //   }
 // }
+

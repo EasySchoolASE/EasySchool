@@ -25,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   // firebase
   final _auth = FirebaseAuth.instance;
-  
+
   // string for displaying the error Message
   String? errorMessage;
 
@@ -91,12 +91,12 @@ class _LoginScreenState extends State<LoginScreen> {
     final loginButton = Material(
       elevation: 5,
       borderRadius: BorderRadius.circular(30),
-      color:const Color.fromRGBO(59, 107, 170, 1),
+      color: const Color.fromRGBO(59, 107, 170, 1),
       child: MaterialButton(
           padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           minWidth: MediaQuery.of(context).size.width,
           onPressed: () async {
-            final prefs=await SharedPreferences.getInstance();
+            final prefs = await SharedPreferences.getInstance();
             prefs.setBool('isLoggedIn', true);
             logIn(emailController.text, passwordController.text);
           },
@@ -110,14 +110,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0,),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: Center(
         child: SingleChildScrollView(
-          child: 
-          SafeArea(
-            maintainBottomViewPadding: true,
-            child:
-          Container(
+            child: SafeArea(
+          maintainBottomViewPadding: true,
+          child: Container(
             color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.all(36.0),
@@ -127,14 +128,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                  GradientText(
-                    'Easy School',
-                    style: const TextStyle(fontSize: 40, fontWeight: FontWeight.w900),
-                    colors: const [
-                      Colors.blue,
-                      Colors.indigo,
-                    ]),
-                    const SizedBox(height: 25,),
+                    GradientText('Easy School',
+                        style: const TextStyle(
+                            fontSize: 40, fontWeight: FontWeight.w900),
+                        colors: const [
+                          Colors.blue,
+                          Colors.indigo,
+                        ]),
+                    const SizedBox(
+                      height: 25,
+                    ),
                     SizedBox(
                         height: 150,
                         width: 150,
@@ -155,13 +158,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           const Text("Don't have an account? "),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(context,
-                                  MaterialPageRoute(builder: (context) => const RegistrationScreen()));
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const RegistrationScreen()));
                             },
                             child: const Text(
                               "SignUp",
                               style: TextStyle(
-                                  color:Color.fromRGBO(59, 107, 170, 1),
+                                  color: Color.fromRGBO(59, 107, 170, 1),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15),
                             ),
@@ -172,8 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          )
-        ),
+        )),
       ),
     );
   }
@@ -186,8 +191,8 @@ class _LoginScreenState extends State<LoginScreen> {
             .signInWithEmailAndPassword(email: email, password: password)
             .then((uid) => {
                   Fluttertoast.showToast(msg: "Login Successful"),
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => const HomeScreen())),
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const HomeScreen())),
                 });
       } on FirebaseAuthException catch (error) {
         switch (error.code) {

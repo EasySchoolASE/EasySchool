@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final prefs = await SharedPreferences.getInstance();
-  final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-  await Firebase.initializeApp();
-  runApp(MyApp(isLoggedIn: isLoggedIn));
-}
+// Future<void> main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   final prefs = await SharedPreferences.getInstance();
+//   final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+//   await Firebase.initializeApp();
+//   runApp(MyApp(isLoggedIn: isLoggedIn));
+// }
 
 class MyApp extends StatelessWidget {
   final bool isLoggedIn;

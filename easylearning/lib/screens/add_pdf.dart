@@ -1,20 +1,22 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
-class AddCoursePage extends StatefulWidget {
-  const AddCoursePage({super.key});
+class AddPdfPage extends StatefulWidget {
+  const AddPdfPage({super.key});
 
   @override
-  State<AddCoursePage> createState() => _AddCoursePageState();
+  State<AddPdfPage> createState() => _AddPdfPageState();
 }
 
-class _AddCoursePageState extends State<AddCoursePage> {
+class _AddPdfPageState extends State<AddPdfPage> {
 
   File?  _selectedImage;
   final descriptionController=TextEditingController();
@@ -24,6 +26,7 @@ class _AddCoursePageState extends State<AddCoursePage> {
   late String subV="";
   late String subSubV="";
   final subjectController=TextEditingController();
+  String pdfURL="";
   final locationController = TextEditingController();
   final subLocationController = TextEditingController();
   final subSubLocationController = TextEditingController();
@@ -35,13 +38,21 @@ class _AddCoursePageState extends State<AddCoursePage> {
   List<String> subjectList=["Math","Physics","Chemistry","Biology"];
   TextStyle textStyleBodyText1 =
     const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, height: 1.3, color: Color.fromRGBO(59, 107, 170, 1),);
-  String imageUrl = '';
-  Future<void> _pickImage(ImageSource source) async {
-    final image = await ImagePicker().pickImage(source: source);
-    setState(() {
-      _selectedImage =File(image!.path);
-    });
+  FilePickerResult? file;
+  String? fileName;
+
+  final mainReference = FirebaseStorage.instance.ref().child('pdfs');
+  Future getPdfAndUpload()async{
+  var rng = Random();
+  String randomName="";
+  for (var i = 0; i < 20; i++) {
+    print(rng.nextInt(100));
+    randomName += rng.nextInt(100).toString();
   }
+  file = await FilePicker.platform.pickFiles(withData: true,type: FileType.custom, allowedExtensions: ['pdf']);
+  fileName = '$randomName.pdf';
+}
+
  
   
     late List<bool> isSelected;
@@ -105,32 +116,6 @@ class _AddCoursePageState extends State<AddCoursePage> {
               },
             ),
             ),]),),
-            CustomContainer2(
-            child: 
-            Column(children: [
-              Center(child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                Text("Duration (in minutes)",style:textStyleBodyText1 ,),
-                Text("*",style: textStyleBodyText1.copyWith(color: Colors.red),),
-              ],),),
-               const SizedBox(height: 10,),
-               CustomTextField3(enabled: true, controller: durationController, hintText: "Type here",keyboardType: TextInputType.number,)
-          ])
-            ),
-             CustomContainer2(
-            child: 
-            Column(children: [
-              Center(child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                Text("Video Link",style:textStyleBodyText1 ,),
-                Text("*",style: textStyleBodyText1.copyWith(color: Colors.red),),
-              ],),),
-               const SizedBox(height: 10,),
-               CustomTextField3(enabled: true,controller: videoController,hintText: "Type here",)
-          ])
-            ),
             // const SizedBox(height: 10,),
              CustomContainer2(child: 
             Column(children: [
@@ -150,7 +135,7 @@ class _AddCoursePageState extends State<AddCoursePage> {
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                Text("ATTACH COVER PHOTO",style: textStyleBodyText1,),
+                Text("ATTACH PDF",style: textStyleBodyText1,),
                 Text("*",style: textStyleBodyText1.copyWith(color: Colors.red),),
               ],),),
                const SizedBox(height: 10,),
@@ -158,59 +143,15 @@ class _AddCoursePageState extends State<AddCoursePage> {
                 style: ElevatedButton.styleFrom(
                   elevation: 0,
                   backgroundColor: Colors.grey[300]),
-                 onPressed: () {
-                   showDialog(
-                   context: context,
-                   builder: (BuildContext context) {
-                     return SimpleDialog(
-                       children: <Widget>[
-                         SimpleDialogOption(
-                            child: Row(
-                                children: <Widget>[
-                                  const SizedBox(width: 10),
-                                  Text("Choose from Library",style: textStyleBodyText1,),
-                                ],
-                              ),
-                             onPressed: () {
-                               // Call the _pickImage function with the gallery source
-                               _pickImage(ImageSource.gallery);
-                               // Close the modal pop-up
-                               Navigator.pop(context);
-                             },
-                           ),
-                          SimpleDialogOption(
-                            child: Row(
-                              children: <Widget>[
-                                const SizedBox(width: 10),
-                                Text("Take Photo",style:textStyleBodyText1,),
-                              ],
-                            ),
-                             onPressed: () {
-                               // Call the _pickImage function with the camera source
-                               _pickImage(ImageSource.camera);
-                               // Close the modal pop-up
-                               Navigator.pop(context);
-                             },
-                           ),
-                           SimpleDialogOption(
-                            child: Row(
-                              children: <Widget>[
-                                const SizedBox(width: 10),
-                                Text("Cancel",style:textStyleBodyText1,),
-                              ],
-                            ),
-                             onPressed: () {
-                               Navigator.pop(context);
-                             },
-                           ),
-                         ],
-                       );
-                     },
-                   );
-                 },
-                 child: _selectedImage == null
+                 onPressed: () async{
+                    await getPdfAndUpload();
+                    setState(() {
+                      
+                    });
+                  },
+                 child:file==null
                      ? const Icon(Icons.add,size: 80,)
-                     : Image.file(_selectedImage!,height: 80,width: 80,),
+                     : Text(file!.files.first.path!,textAlign: TextAlign.center,)
                ),
           ])
           ),
@@ -225,51 +166,40 @@ class _AddCoursePageState extends State<AddCoursePage> {
               elevation: 0,
               splashFactory: NoSplash.splashFactory),
               onPressed: () async{
-                    if(durationController.text.isEmpty){
-                      Fluttertoast.showToast(msg: "Duration is required");
-                    }
-                    else if(subjectController.text.isEmpty){
+                    if(subjectController.text.isEmpty){
                        Fluttertoast.showToast(msg: "Subject is required");
                     }
                      else if(titleController.text.isEmpty){
                        Fluttertoast.showToast(msg: "Title is required");
                     }
-                    else if(videoController.text.isEmpty){
-                       Fluttertoast.showToast(msg: "Video link is required");
-                    }
-                    else if(_selectedImage!.path.isEmpty){
-                       Fluttertoast.showToast(msg: "Image is required");
+                    else if(file==null){
+                       Fluttertoast.showToast(msg: "PDF is required");
                     }
                     else{
-                   EasyLoading.show(maskType: EasyLoadingMaskType.black);
-                   Reference referenceRoot = FirebaseStorage.instance.ref();
-                   Reference referenceDirImages = referenceRoot.child('images');
-
+                    Reference referenceRoot = FirebaseStorage.instance.ref();
+                    Reference referenceDirImages = referenceRoot.child('pdfs');
                     //Create a reference for the image to be stored
-                    Reference referenceImageToUpload = referenceDirImages.child('name');
-
+                    Reference referenceImageToUpload = referenceDirImages.child(fileName!);
+                    Uint8List? fileBytes = file!.files.first.bytes;
                     //Handle errors/success
                     try {
+                    // Upload file
+                    await referenceImageToUpload.putData(file!.files.first.bytes!);
+                    pdfURL=await referenceImageToUpload.getDownloadURL();
                       //Store the file
-                      await referenceImageToUpload.putFile(File(_selectedImage!.path));
-                      //Success: get the download URL
-                      imageUrl = await referenceImageToUpload.getDownloadURL();
                     } catch (error) {
                       //Some error occurred
                       print("#########################");
                       print(error);
                       print("#########################");
                     }
-                  await FirebaseFirestore.instance.collection('videos').add({
-                    'duration':durationController.text,
-                    'photoLink':imageUrl,
+                  await FirebaseFirestore.instance.collection('pdfs').add({
+                    'pdfLink':pdfURL,
                     'subject':subjectController.text,
                     'title':titleController.text,
-                    'videoLink':videoController.text,
                   });
-                  Fluttertoast.showToast(msg: "Video Added Successfully!");
-                  durationController.clear();
-                  imageUrl="";
+                  Fluttertoast.showToast(msg: "PDF Added Successfully!");
+                  pdfURL="";
                   subjectController.clear();
                   titleController.clear();
                   videoController.clear();

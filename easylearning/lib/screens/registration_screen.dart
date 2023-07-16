@@ -258,6 +258,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             .then((value) => {postDetailsToFirestore()})
             // ignore: body_might_complete_normally_catch_error
             .catchError((e) {
+              print(e);
           Fluttertoast.showToast(msg: e!.message);
         });
       } on FirebaseAuthException catch (error) {

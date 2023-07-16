@@ -42,6 +42,16 @@ dependencies:
   cloud_firestore: ^4.8.1
   flutter_launcher_icons: ^0.13.1
   simple_gradient_text: ^1.2.4
+  font_awesome_flutter: ^10.5.0
+  url_launcher: ^6.1.12
+  image_cropper: ^5.0.0
+  image_picker: ^1.0.1
+  google_fonts: ^5.1.0
+  cached_network_image: ^3.2.3
+  file_picker: ^5.3.2
+  dio: ^5.2.1+1
+  firebase_storage: ^11.2.5
+  flutter_easyloading: ^3.0.5
 
 dev_dependencies:
   flutter_test:

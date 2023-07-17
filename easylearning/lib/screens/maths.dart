@@ -24,7 +24,7 @@ class _MathsPageState extends State<MathsPage> {
   void getData() async{
      QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance.collection('videos').get();
      for(int i=0;i<snapshot.docs.length;i++){
-      if(VideoModel.fromMap(snapshot.docs[i].data()).subject=="Math" && list.isEmpty){
+      if(VideoModel.fromMap(snapshot.docs[i].data()).subject=="Math" && list.isEmpty ){
       list.add(VideoModel.fromMap(snapshot.docs[i].data()));
       }
      }

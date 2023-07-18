@@ -34,6 +34,16 @@ class Student {
     }
   }
 
+  void deleteCourse(Course course) {
+    if (!course.isEnrolled) {
+      course.isEnrolled = true;
+      coursesEnrolled.add(course);
+      print('Enrolled in ${course.name}');
+    } else {
+      print('Delete course ${course.name}');
+    }
+  }
+
   void dropCourse(Course course) {
     if (course.isEnrolled) {
       course.isEnrolled = false;

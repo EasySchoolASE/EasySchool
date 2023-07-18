@@ -21,6 +21,7 @@ class _MathsPageState extends State<MathsPage> {
 
   List<VideoModel> list=[];
 
+//function to retrive data
   void getData() async{
      QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance.collection('videos').get();
      for(int i=0;i<snapshot.docs.length;i++){

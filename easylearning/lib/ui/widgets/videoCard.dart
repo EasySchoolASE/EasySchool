@@ -9,7 +9,8 @@ class VideoCard extends material.StatelessWidget {
     required this.long,
     material.Key? key,
   }) : super(key: key);
-
+  
+  //video card added
   @override
   material.Widget build(material.BuildContext context) {
     return material.Padding(

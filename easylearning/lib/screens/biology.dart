@@ -8,6 +8,7 @@ class biology extends StatefulWidget {
   @override
   State<biology> createState() => _biologyState();
 }
+//biology page
 
 class _biologyState extends State<biology> {
   @override

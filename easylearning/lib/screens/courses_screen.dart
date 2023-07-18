@@ -73,6 +73,17 @@ class Student {
   }
 }
 
+  void editCourse(Course course) {
+    if (!course.isEnrolled) {
+      course.isEnrolled = true;
+      editCourse.editCourse(course);
+      print('Enrolled in ${course.name}');
+    } else {
+      print('Delete course ${course.name}');
+    }
+  }
+
+
 void main() {
   // Creating sample courses
   Course course1 = Course('Mathematics', 'John Doe', 10, 99.99);

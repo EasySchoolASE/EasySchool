@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../Model/UserModel.dart';
 
-class Course {
+class Course implements Comparable<Course> {
   String name;
   String instructor;
   int duration;
@@ -13,6 +13,11 @@ class Course {
 
   Course(this.name, this.instructor, this.duration, this.price) {
     isEnrolled = false;
+  }
+
+  @override
+  int compareTo(Course other) {
+    return name.compareTo(other.name);
   }
 }
 
@@ -48,6 +53,8 @@ class Student {
     if (coursesEnrolled.isEmpty) {
       print('No courses enrolled.');
     } else {
+      coursesEnrolled.sort(); // Sort the enrolled courses
+
       print('Enrolled Courses:');
       for (var course in coursesEnrolled) {
         print('- ${course.name} (Instructor: ${course.instructor})');

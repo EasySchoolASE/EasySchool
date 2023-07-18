@@ -1,7 +1,7 @@
 import 'package:easylearning/screens/login_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 import '../Model/UserModel.dart';
 
 class Course implements Comparable<Course> {

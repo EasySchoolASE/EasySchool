@@ -18,6 +18,8 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
   // form key
   final _formKey = GlobalKey<FormState>();
 
+
+
   // editing controller
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -39,7 +41,7 @@ class _AdminLoginScreenState extends State<AdminLoginScreen> {
           // reg expression for email validation
           if (!RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+.[a-z]")
               .hasMatch(value)) {
-            return ("Please Enter a valid email");
+            return ("Please Enter the valid email");
           }
           return null;
         },

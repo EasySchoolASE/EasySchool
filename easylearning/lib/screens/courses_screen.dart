@@ -122,3 +122,33 @@ void main() {
   // Displaying enrolled courses after dropping
   student.displayEnrolledCourses();
 }
+
+class ScreenDisplay extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Screen Display"),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.network(
+              "https://example.com/sample_image.jpg", // Replace with your image URL
+              width: 200,
+              height: 200,
+            ),
+            SizedBox(height: 20),
+            Text(
+              "Hello, Flutter!",
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 10),
+            Text("Welcome to the Screen Display example."),
+          ],
+        ),
+      ),
+    );
+  }
+}

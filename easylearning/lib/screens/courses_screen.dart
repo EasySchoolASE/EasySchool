@@ -1,10 +1,10 @@
 import 'package:easylearning/screens/login_screens.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 import '../Model/UserModel.dart';
 
-class Course {
+class Course implements Comparable<Course> {
   String name;
   String instructor;
   int duration;
@@ -13,6 +13,11 @@ class Course {
 
   Course(this.name, this.instructor, this.duration, this.price) {
     isEnrolled = false;
+  }
+
+  @override
+  int compareTo(Course other) {
+    return name.compareTo(other.name);
   }
 }
 
@@ -58,6 +63,8 @@ class Student {
     if (coursesEnrolled.isEmpty) {
       print('No courses enrolled.');
     } else {
+      coursesEnrolled.sort(); // Sort the enrolled courses
+
       print('Enrolled Courses:');
       for (var course in coursesEnrolled) {
         print('- ${course.name} (Instructor: ${course.instructor})');
@@ -121,34 +128,4 @@ void main() {
 
   // Displaying enrolled courses after dropping
   student.displayEnrolledCourses();
-}
 
-class ScreenDisplay extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Screen Display"),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.network(
-              "https://example.com/sample_image.jpg", // Replace with your image URL
-              width: 200,
-              height: 200,
-            ),
-            SizedBox(height: 20),
-            Text(
-              "Hello, Flutter!",
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 10),
-            Text("Welcome to the Screen Display example."),
-          ],
-        ),
-      ),
-    );
-  }
-}

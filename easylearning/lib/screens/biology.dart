@@ -8,11 +8,13 @@ class biology extends StatefulWidget {
   @override
   State<biology> createState() => _biologyState();
 }
+//biology page
 
 class _biologyState extends State<biology> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
+      //expanded widget ui fixed
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               height: 20,

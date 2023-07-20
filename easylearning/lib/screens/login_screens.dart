@@ -79,6 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         onSaved: (value) {
           passwordController.text = value!;
+          //password controller
         },
         textInputAction: TextInputAction.done,
         decoration: InputDecoration(
@@ -246,6 +247,67 @@ class _LoginScreenState extends State<LoginScreen> {
         }
         Fluttertoast.showToast(msg: errorMessage!);
       }
+
+      class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextField(
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                labelText: 'Email',
+              ),
+            ),
+            SizedBox(height: 16),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                labelText: 'Password',
+              ),
+            ),
+            SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: _login,
+              child: Text('Login'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passwordController = TextEditingController();
+
+  void _login() {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+    // Perform your authentication logic here, e.g., using Firebase authentication.
+    // For simplicity, we'll just print the email and password here.
+    print('Email: $email, Password: $password');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // ... (rest of the build method remains the same)
+  }
+}
+
     }
   }
 }

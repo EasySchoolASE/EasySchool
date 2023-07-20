@@ -76,6 +76,26 @@ class Student {
     }
   }
 
+void displayEnrolledCourses(Course course) {
+    if (!course.isEnrolled) {
+      course.isEnrolled = true;
+      editCourse.displayEnrolledCourses(course);
+      print('Enrolled in ${course.name}');
+    } else {
+      print('Delete course ${course.name}');
+    }
+  }
+
+  void displayEnrolledCourses2(Course course) {
+    if (!course.isEnrolled) {
+      course.isEnrolled = true;
+      editCourse.displayEnrolledCourses2(course);
+      print('Enrolled in ${course.name}');
+    } else {
+      print('Delete course ${course.name}');
+    }
+  }
+
 
 void main() {
   // Creating sample courses

@@ -27,6 +27,9 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
     'Physics': 0,
   };
 
+  // TextEditingController to handle student name input
+  TextEditingController studentNameController = TextEditingController();
+
   void updateScore(String subject, int score) {
     setState(() {
       subjectScores[subject] = score;
@@ -44,7 +47,9 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
           children: [
             Text('Student Name', style: TextStyle(fontSize: 18)),
             SizedBox(height: 8),
+            // Use TextField with TextEditingController to handle student name input
             TextField(
+              controller: studentNameController,
               onChanged: (value) {
                 // You can handle student name input here if needed.
               },
@@ -54,6 +59,10 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
               ),
             ),
             SizedBox(height: 16),
+            Text('Subject Scores',
+                style:
+                    TextStyle(fontSize: 18)), // Added label for subject scores
+            SizedBox(height: 8),
             Expanded(
               child: ListView.builder(
                 itemCount: subjectScores.length,
@@ -89,15 +98,8 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
         int score = 0; // Initialize the quiz score here.
         return AlertDialog(
           title: Text('Quiz - $subject'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Implement your quiz questions and options here.
-              // Update the 'score' variable based on the user's answers.
-              Text('Question 1:'),
-              // ...
-            ],
-          ),
+          content:
+              _buildQuizContent(), // Move quiz dialog content to a separate method
           actions: [
             TextButton(
               onPressed: () {
@@ -109,6 +111,19 @@ class _StudentProgressScreenState extends State<StudentProgressScreen> {
           ],
         );
       },
+    );
+  }
+
+  // Widget method for quiz dialog content
+  Widget _buildQuizContent() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Implement your quiz questions and options here.
+        // Update the 'score' variable based on the user's answers.
+        Text('Question 1:'),
+        // ...
+      ],
     );
   }
 }

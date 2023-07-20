@@ -28,3 +28,24 @@ class _biologyState extends State<biology> {
           );
   }
 }
+
+
+class _biologyState2 extends State<biology> {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              height: 20,
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: 4,
+                itemBuilder: (context, index) {
+                  return const VideoCard(long: false);
+                },
+              ),
+            ),
+          );
+  }
+}

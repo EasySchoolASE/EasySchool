@@ -86,7 +86,7 @@ class _TopBarAdminState extends State<TopBarAdmin> {
                   height: MediaQuery.of(context).size.height * 0.20,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 4,
+                    itemCount: 3,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return Padding(
@@ -132,10 +132,9 @@ class _TopBarAdminState extends State<TopBarAdmin> {
                                             index==1?Colors.red:
                                             index==2? const Color(0xFFFFD700):const Color(0xFF33FF33),),
                                 Text(index == 0
-                                    ? "Add Video"
+                                    ? "Add Course"
                                     : index == 1
-                                        ? "Add PDF"
-                                        : index == 2 ? "View Students" : "View Course Content",
+                                       ? "View Students" : "View Course Content",
                                         style: GoogleFonts.rubikDirt(
                                         fontSize: 20, 
                                         fontWeight: FontWeight.w500, 
@@ -161,7 +160,7 @@ class _TopBarAdminState extends State<TopBarAdmin> {
               )
               : Container(),
                 Container(
-                height: 850,
+                height: 1024,
                 child:
                  pages[current],
                  ),

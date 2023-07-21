@@ -1,11 +1,10 @@
-import 'dart:io';
+
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 
@@ -18,7 +17,6 @@ class AddPdfPage extends StatefulWidget {
 
 class _AddPdfPageState extends State<AddPdfPage> {
 
-  File?  _selectedImage;
   final descriptionController=TextEditingController();
   final durationController=TextEditingController();
   final videoController=TextEditingController();
@@ -55,7 +53,7 @@ class _AddPdfPageState extends State<AddPdfPage> {
 
  
   
-    late List<bool> isSelected;
+  late List<bool> isSelected;
   
   @override
   Widget build(BuildContext context) {
@@ -180,7 +178,6 @@ class _AddPdfPageState extends State<AddPdfPage> {
                     Reference referenceDirImages = referenceRoot.child('pdfs');
                     //Create a reference for the image to be stored
                     Reference referenceImageToUpload = referenceDirImages.child(fileName!);
-                    Uint8List? fileBytes = file!.files.first.bytes;
                     //Handle errors/success
                     try {
                     // Upload file

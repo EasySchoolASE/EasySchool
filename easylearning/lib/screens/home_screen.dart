@@ -56,37 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
               
               // });
             }),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Recommendations",
-                          style: TextStyle(
-                            color: Color.fromRGBO(59, 107, 170, 1),
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                          },
-                          child: const Text(
-                            "See all",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 15,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                 ]),
             ]
             )
           )

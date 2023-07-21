@@ -21,21 +21,22 @@ class _MathsPageState extends State<MathsPage> {
 
   List<VideoModel> list=[];
 
-//function to retrive data
+//function to get data
   void getData() async{
      QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance.collection('videos').get();
      for(int i=0;i<snapshot.docs.length;i++){
-      if(VideoModel.fromMap(snapshot.docs[i].data()).subject=="Math" && list.isEmpty ){
+      if(VideoModel.fromMap(snapshot.docs[i].data()).subject=="Math" ){
       list.add(VideoModel.fromMap(snapshot.docs[i].data()));
       }
      }
      setState(() {});
+     print(snapshot.docs.length);
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 190,
+            height: 200,
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               height: 20,
@@ -50,13 +51,13 @@ class _MathsPageState extends State<MathsPage> {
                     gradient: true,
                     button: true,
                     width:  180,
-                    height: 200,
+                    height: 180,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Container(
                           width: 180,
-                          height: 100,
+                          height: 120,
                           decoration: BoxDecoration(
                             image: DecorationImage(
                                 image: NetworkImage('${list[index].photoLink}'),
@@ -109,7 +110,7 @@ class _MathsPageState extends State<MathsPage> {
                           padding: const EdgeInsets.only(top: 0),
                           child: GestureDetector(
                             child: Container(
-                              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                               // decoration: BoxDecoration(gradient: Colors.),
                               child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

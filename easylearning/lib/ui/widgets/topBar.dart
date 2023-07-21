@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../screens/biology.dart';
 import '../../screens/chemistry.dart';
 import '../../screens/maths.dart';
@@ -47,7 +46,7 @@ class _TopBarState extends State<TopBar> {
       color: CupertinoColors.white,
       width: MediaQuery.of(context).size.width,
       height: widget.expanded
-          ? MediaQuery.of(context).size.height * 0.70
+          ? MediaQuery.of(context).size.height * 0.80
           : MediaQuery.of(context).size.height * 0.19,
       child: 
       Column(
@@ -172,17 +171,18 @@ class _TopBarState extends State<TopBar> {
                                             color:index ==0?const Color(0xFF2828FF):
                                             index==1?const Color(0xFFFF2E2E):
                                             index==2? const Color(0xFFFFD700):const Color(0xFF33FF33),),
-                                Text(index == 0
-                                    ? "Maths"
-                                    : index == 1
-                                        ? "Physics"
-                                        : index == 2 ? "Chemistry" : "Biology",
-                                        style: GoogleFonts.rubikDirt(
-                                        fontSize: 20, 
-                                        fontWeight: FontWeight.w500, 
-                                        color: Colors.white,
-                                  ),
-                                )
+                                 Padding(padding: const EdgeInsets.all(5),
+                                 child:
+                                 ClipRRect(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  child: Image.asset(
+                                  index==0?'assets/images/math.jpeg'
+                                  :index==1?'assets/images/physics.jpeg'
+                                  :index==2?'assets/images/chemistry.jpeg':'assets/images/biology.jpeg',
+                                  // width: 50,
+                                  )
+                                ),
+                                 ),
                               ],
                             ),
                           ),
@@ -204,6 +204,58 @@ class _TopBarState extends State<TopBar> {
                 //       child: Center(
                 //         child: pages[current]),
                 //     ),
+              Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Notes",
+                          style: TextStyle(
+                            color: Color.fromRGBO(59, 107, 170, 1),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                          },
+                          child: const Text(
+                            "See all",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 15,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                 ]),
+              const SizedBox(height: 20,),
+              const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Recommended Lectures",
+                          style: TextStyle(
+                            color: Color.fromRGBO(59, 107, 170, 1),
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                      ],
+                    ),
+                 ]),
+                const SizedBox(height: 10,),
                 Container(
                   height:  MediaQuery.of(context).size.height * 0.30,
                   key: UniqueKey(),

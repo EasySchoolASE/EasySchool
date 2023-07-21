@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,6 +34,9 @@ class _AddCoursePageState extends State<AddCoursePage> {
   final subLocationId = TextEditingController();
   final projectId=TextEditingController();
   final clientId = TextEditingController();
+  FilePickerResult? file;
+  String? fileName;
+  String pdfURL="";
   List<String> subjectList=["Math","Physics","Chemistry","Biology"];
   TextStyle textStyleBodyText1 =
     const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, height: 1.3, color: Color.fromRGBO(59, 107, 170, 1),);
@@ -42,9 +47,21 @@ class _AddCoursePageState extends State<AddCoursePage> {
       _selectedImage =File(image!.path);
     });
   }
+  
+  final mainReference = FirebaseStorage.instance.ref().child('pdfs');
+  Future getPdfAndUpload()  async{
+  var rng = Random();
+  String randomName="";
+  for (var i = 0; i < 20; i++) {
+    print(rng.nextInt(100));
+    randomName += rng.nextInt(100).toString();
+  }
+  file = await FilePicker.platform.pickFiles(withData: true,type: FileType.custom, allowedExtensions: ['pdf']);
+  fileName = '$randomName.pdf';
+  }
  
   
-    late List<bool> isSelected;
+  late List<bool> isSelected;
   
   @override
   Widget build(BuildContext context) {
@@ -214,6 +231,32 @@ class _AddCoursePageState extends State<AddCoursePage> {
                ),
           ])
           ),
+            CustomContainer2(
+            child: 
+            Column(children: [
+              Center(child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                Text("ATTACH PDF",style: textStyleBodyText1,),
+                Text("*",style: textStyleBodyText1.copyWith(color: Colors.red),),
+              ],),),
+               const SizedBox(height: 10,),
+               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  backgroundColor: Colors.grey[300]),
+                 onPressed: () async{
+                    await getPdfAndUpload();
+                    setState(() {
+                      
+                    });
+                  },
+                 child:file==null
+                     ? const Icon(Icons.add,size: 80,)
+                     : Text(file!.files.first.path!,textAlign: TextAlign.center,)
+               ),
+          ])
+          ),
            const SizedBox(height: 20,),
            Container(
             height: 45,
@@ -260,12 +303,29 @@ class _AddCoursePageState extends State<AddCoursePage> {
                       print(error);
                       print("#########################");
                     }
+                   Reference referenceRoot1 = FirebaseStorage.instance.ref();
+                    Reference referenceDirImages1 = referenceRoot1.child('pdfs');
+                    //Create a reference for the image to be stored
+                    Reference referenceImageToUpload1 = referenceDirImages1.child(fileName!);
+                    //Handle errors/success
+                    try {
+                    // Upload file
+                    await referenceImageToUpload1.putData(file!.files.first.bytes!);
+                    pdfURL=await referenceImageToUpload1.getDownloadURL();
+                      //Store the file
+                    } catch (error) {
+                      //Some error occurred
+                      print("#########################");
+                      print(error);
+                      print("#########################");
+                    }
                   await FirebaseFirestore.instance.collection('videos').add({
                     'duration':durationController.text,
                     'photoLink':imageUrl,
                     'subject':subjectController.text,
                     'title':titleController.text,
                     'videoLink':videoController.text,
+                    'pdfLink':pdfURL,
                   });
                   Fluttertoast.showToast(msg: "Video Added Successfully!");
                   durationController.clear();

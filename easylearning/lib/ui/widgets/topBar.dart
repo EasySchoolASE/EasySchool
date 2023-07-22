@@ -1,3 +1,4 @@
+import 'package:easylearning/ui/pages/notes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/material.dart';
@@ -222,6 +223,8 @@ class _TopBarState extends State<TopBar> {
                         ),
                         GestureDetector(
                           onTap: () {
+                            Navigator.push(context,
+                                  MaterialPageRoute(builder: (context) => const Notes(subject: "Math")));
                           },
                           child: const Text(
                             "See all",

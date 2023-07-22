@@ -17,7 +17,7 @@ factory VideoModel.fromMap(map){
     videoLink: map['videoLink'],
     photoLink: map['photoLink'],
     title: map['title'],
-    pdfURL: map['pdfURL']
+    pdfURL: map['pdfLink']
   );
 }
 
@@ -29,7 +29,7 @@ Map<String, dynamic> toMap(){
     'videoLink': videoLink,
     'photoLink':photoLink,
     'title': title,
-    'pdfURL':pdfURL,
+    'pdfLink':pdfURL,
   };
 }
 

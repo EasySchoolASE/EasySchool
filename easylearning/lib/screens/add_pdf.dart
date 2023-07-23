@@ -1,12 +1,7 @@
-
-import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class AddPdfPage extends StatefulWidget {
   const AddPdfPage({super.key});
@@ -20,40 +15,56 @@ class _AddPdfPageState extends State<AddPdfPage> {
   final descriptionController=TextEditingController();
   final durationController=TextEditingController();
   final videoController=TextEditingController();
-  final titleController=TextEditingController();
-  late String subV="";
-  late String subSubV="";
+  final questionController=TextEditingController();
   final subjectController=TextEditingController();
   String pdfURL="";
-  final locationController = TextEditingController();
-  final subLocationController = TextEditingController();
-  final subSubLocationController = TextEditingController();
-  final locationId=TextEditingController();
-  final subSubLocationId = TextEditingController();
-  final subLocationId = TextEditingController();
-  final projectId=TextEditingController();
-  final clientId = TextEditingController();
   List<String> subjectList=["Math","Physics","Chemistry","Biology"];
-  TextStyle textStyleBodyText1 =
-    const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, height: 1.3, color: Color.fromRGBO(59, 107, 170, 1),);
-  FilePickerResult? file;
-  String? fileName;
+  TextStyle textStyleBodyText1 = const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, height: 1.3, color: Color.fromRGBO(59, 107, 170, 1),);
 
-  final mainReference = FirebaseStorage.instance.ref().child('pdfs');
-  Future getPdfAndUpload()async{
-  var rng = Random();
-  String randomName="";
-  for (var i = 0; i < 20; i++) {
-    print(rng.nextInt(100));
-    randomName += rng.nextInt(100).toString();
+  List<Widget> widgets = [];
+  var options = <TextEditingController>[];
+  var scores = <TextEditingController>[];
+  var fields=[];
+
+  createField(){
+    var optionController = TextEditingController();
+    var scoreController = TextEditingController();
+    options.add(optionController);
+    scores.add(scoreController);
+    return CustomContainer2(
+      child:
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+          SizedBox(
+            width: 230,
+            height: 80,
+            child: 
+           CustomTextField3(
+              controller: optionController,
+              hintText: "Add option",
+          ),
+          ),
+          SizedBox(
+            width: 50,
+            height: 80,
+            child:
+          CustomTextField3(
+              controller: scoreController,
+              hintText: "Score",
+              keyboardType: TextInputType.number,
+           ),
+          )
+          ]),
+    );
   }
-  file = await FilePicker.platform.pickFiles(withData: true,type: FileType.custom, allowedExtensions: ['pdf']);
-  fileName = '$randomName.pdf';
-}
 
- 
-  
-  late List<bool> isSelected;
+  @override 
+  void initState() {
+    fields.add(createField());
+    super.initState();
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -115,98 +126,92 @@ class _AddPdfPageState extends State<AddPdfPage> {
             ),
             ),]),),
             // const SizedBox(height: 10,),
-             CustomContainer2(child: 
+          CustomContainer2(child: 
             Column(children: [
               Center(child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                Text("Title",style: textStyleBodyText1,),
+                Text("Question",style: textStyleBodyText1,),
                 Text("*",style: textStyleBodyText1.copyWith(color: Colors.red),),
               ],),),
                const SizedBox(height: 10,),
-               CustomTextFieldArea(enabled: true,controller: titleController,hintText: "Type here",)
-          ])
-            ),
-          CustomContainer2(
-            child: 
-            Column(children: [
-              Center(child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                Text("ATTACH PDF",style: textStyleBodyText1,),
-                Text("*",style: textStyleBodyText1.copyWith(color: Colors.red),),
-              ],),),
-               const SizedBox(height: 10,),
-               ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  backgroundColor: Colors.grey[300]),
-                 onPressed: () async{
-                    await getPdfAndUpload();
-                    setState(() {
-                      
-                    });
-                  },
-                 child:file==null
-                     ? const Icon(Icons.add,size: 80,)
-                     : Text(file!.files.first.path!,textAlign: TextAlign.center,)
-               ),
+               CustomTextFieldArea(enabled: true, controller: questionController, hintText: "Type here",)
           ])
           ),
-           const SizedBox(height: 20,),
-           Container(
-            height: 45,
-            width: MediaQuery.of(context).size.width,
-            margin:const EdgeInsets.only(left: 20,right: 20),
-              child: 
-             ElevatedButton(
-              style: ElevatedButton.styleFrom(backgroundColor:  const Color.fromRGBO(59, 107, 170, 1),
-              elevation: 0,
-              splashFactory: NoSplash.splashFactory),
-              onPressed: () async{
-                    if(subjectController.text.isEmpty){
-                       Fluttertoast.showToast(msg: "Subject is required");
-                    }
-                     else if(titleController.text.isEmpty){
-                       Fluttertoast.showToast(msg: "Title is required");
-                    }
-                    else if(file==null){
-                       Fluttertoast.showToast(msg: "PDF is required");
-                    }
-                    else{
-                    Reference referenceRoot = FirebaseStorage.instance.ref();
-                    Reference referenceDirImages = referenceRoot.child('pdfs');
-                    //Create a reference for the image to be stored
-                    Reference referenceImageToUpload = referenceDirImages.child(fileName!);
-                    //Handle errors/success
-                    try {
-                    // Upload file
-                    await referenceImageToUpload.putData(file!.files.first.bytes!);
-                    pdfURL=await referenceImageToUpload.getDownloadURL();
-                      //Store the file
-                    } catch (error) {
-                      //Some error occurred
-                      print("#########################");
-                      print(error);
-                      print("#########################");
-                    }
-                  await FirebaseFirestore.instance.collection('pdfs').add({
-                    'pdfLink':pdfURL,
-                    'subject':subjectController.text,
-                    'title':titleController.text,
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+                itemCount: fields.length,
+                shrinkWrap: true,
+                itemBuilder: (BuildContext context, int index) {
+                  return 
+                  Column(children: [
+                  const SizedBox(height: 5,),
+                  Center(child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                  Text("      Option ${index+1}",style: textStyleBodyText1,),
+                  Text("*",style: textStyleBodyText1.copyWith(color: Colors.red),),
+                  ],),),
+                    fields[index]
+                  ]);
+                },
+             ),
+              const SizedBox(height: 10,),
+              if(fields.length<=3)...{
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    fields.add(createField());
                   });
-                  Fluttertoast.showToast(msg: "PDF Added Successfully!");
-                  pdfURL="";
-                  subjectController.clear();
-                  titleController.clear();
-                  videoController.clear();
-                  EasyLoading.dismiss();
+                },
+                child: const Text("Add Options"))
+              ])
+              },
+              if(fields.length>=3)...{
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+              ElevatedButton(
+                onPressed: () async {
+                  if(subjectController.text.isEmpty){
+                    Fluttertoast.showToast(msg: 'Subject is required');
                   }
-              }, 
-               child: Text("Submit", style: textStyleBodyText1.copyWith(color: Colors.black),)),
-           ),
-          ]
-        )));
+                  else if(options.any((element) => element.text.isEmpty)){
+                     Fluttertoast.showToast(msg: 'Fill all options please');
+                  }
+                  else if(scores.any((element) => element.text.isEmpty)){
+                     Fluttertoast.showToast(msg: 'Please fill all scores');
+                  }
+                  else{
+                  List map=[];
+                  for(int i=0;i<options.length;i++){
+                    map.add({
+                      'text':options[i].text,
+                      'score':int.parse(scores[i].text),
+                    });
+                  }
+                    await FirebaseFirestore.instance.collection(subjectController.text).add({
+                    'question':questionController.text,
+                    'options':map,
+                  });
+                  Fluttertoast.showToast(msg: 'Question added successfully');
+                  fields.clear();
+                  options.clear();
+                  scores.clear();
+                  questionController.clear();
+                  setState(() {
+                    
+                  });
+                  }
+                },
+                child: const Text("Submit"))
+              ])
+              }
+          ])
+        ));
   }
 }
 

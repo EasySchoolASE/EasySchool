@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'answer.dart';
 
 class QuizScreen extends StatelessWidget {
-final List<Map<String, Object>> questions;
+final List questions;
 final int questionIndex;
 final Function answerQuestion;
 
@@ -20,9 +20,9 @@ Widget build(BuildContext context) {
 	return Column(
 	children: [
 		Question(
-		questions[questionIndex]['questionText'].toString(),
+		questions[questionIndex]['question'].toString(),
 		), //Question
-		...(questions[questionIndex]['answers'] as List<Map<String, Object>>)
+		...(questions[questionIndex]['options'] as List)
 			.map((answer) {
 		return Answer(
 			() => answerQuestion(answer['score']), answer['text'].toString());

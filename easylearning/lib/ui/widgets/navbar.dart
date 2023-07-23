@@ -1,6 +1,7 @@
 import 'package:easylearning/screens/home_screen.dart';
 import 'package:easylearning/screens/login_screens.dart';
-import 'package:easylearning/screens/quiz.dart';
+import 'package:easylearning/screens/quiz_subjects.dart';
+import 'package:easylearning/screens/view_results.dart';
 import 'package:easylearning/ui/pages/aboutus.dart';
 import 'package:easylearning/ui/pages/contactus.dart';
 import 'package:easylearning/ui/pages/faq.dart';
@@ -70,7 +71,19 @@ class _NavBarState extends State<NavBar> {
                 // Then close the drawer
                 Navigator.pop(context);
                 Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const QuizApp()));
+                MaterialPageRoute(builder: (context) => const QuizSubjects()));
+              },
+            ),
+            ListTile(
+              title: const Text('Results'),
+              // selected: _selectedIndex == 1,
+              onTap: () {
+                // Update the state of the app
+                // _onItemTapped(1);
+                // Then close the drawer
+                Navigator.pop(context);
+                Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const ViewResults()));
               },
             ),
             ListTile(

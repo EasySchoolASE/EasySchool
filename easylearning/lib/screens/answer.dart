@@ -17,9 +17,8 @@ Widget build(BuildContext context) {
      await selectHandler();
     },
 		style: ButtonStyle(
-			textStyle:
-				MaterialStateProperty.all(const TextStyle(color: Colors.white)),
-			backgroundColor: MaterialStateProperty.all(Colors.green)),
+			textStyle: MaterialStateProperty.all(const TextStyle(color: Colors.white)),
+			backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(59, 107, 170, 1),)),
 		child: Text(answerText),
 	),
 	); //Container

@@ -86,7 +86,7 @@ class _TopBarAdminState extends State<TopBarAdmin> {
                   height: MediaQuery.of(context).size.height * 0.20,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: 3,
+                    itemCount: 4,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return Padding(
@@ -134,7 +134,8 @@ class _TopBarAdminState extends State<TopBarAdmin> {
                                 Text(index == 0
                                     ? "Add Course"
                                     : index == 1
-                                       ? "View Students" : "View Course Content",
+                                    ? "Add Quiz":
+                                      index==2 ? "View Students" : "View Course Content",
                                         style: GoogleFonts.rubikDirt(
                                         fontSize: 20, 
                                         fontWeight: FontWeight.w500, 

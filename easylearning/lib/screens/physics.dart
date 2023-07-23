@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
 import '../Model/videosModel.dart';
 import '../ui/widgets/card.dart';
-import '../ui/widgets/videoCard.dart';
 
 class Physics extends StatefulWidget {
   const Physics({super.key});

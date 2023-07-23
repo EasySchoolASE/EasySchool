@@ -289,7 +289,7 @@ class _AddCoursePageState extends State<AddCoursePage> {
                    Reference referenceDirImages = referenceRoot.child('images');
 
                     //Create a reference for the image to be stored
-                    Reference referenceImageToUpload = referenceDirImages.child('name');
+                    Reference referenceImageToUpload = referenceDirImages.child(_selectedImage!.path);
 
                     //Handle errors/success
                     try {

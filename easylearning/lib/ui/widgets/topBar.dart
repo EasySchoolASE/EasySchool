@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart' as material;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../screens/biology.dart';
 import '../../screens/chemistry.dart';
 import '../../screens/maths.dart';
@@ -26,14 +28,23 @@ class TopBar extends StatefulWidget {
 }
 
 class _TopBarState extends State<TopBar> {
+
+  @override
+  void initState() {
+    getUserName();
+    super.initState();
+  }
+
+  String userName="";
+
+  getUserName() async{
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+    userName= sharedPreferences.get('userName').toString();
+    setState(() {});
+  }
+
   int tab = 0;
   int current = 0;
-  List<String> tabName = [
-    "MY TOOLS",
-    "MY TASK",
-    "MY TOOLS",
-    "MY TOOLS",
-  ];
   List pages = [
       const MathsPage(),
       const Physics(),
@@ -43,13 +54,13 @@ class _TopBarState extends State<TopBar> {
   @override
   Widget build(BuildContext context) {
     return 
-    Container(
+    userName!="null"? Container(
       color: CupertinoColors.white,
       width: MediaQuery.of(context).size.width,
       height: widget.expanded
           ? MediaQuery.of(context).size.height * 0.80
           : MediaQuery.of(context).size.height * 0.19,
-      child: 
+      child:
       Column(
         mainAxisSize: MainAxisSize.min,
         children:[
@@ -59,67 +70,41 @@ class _TopBarState extends State<TopBar> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+                 Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Text(
-                    "Hi, User",
-                    style: TextStyle(
-                        color: Color(0xFF343434),
-                        fontSize: 24,
-                        fontFamily: 'Red Hat Display',
-                        fontWeight: material.FontWeight.w600),
+                    "Hi, ${userName.toUpperCase()}",
+                    style: GoogleFonts.rubikBubbles(
+                        color: const Color.fromRGBO(59, 107, 170, 1),
+                        fontSize: 34,
+                        fontWeight: material.FontWeight.w100,
+                     ),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
-                  child: GestureDetector(
+                  child:
+                  Card(
+                    elevation: 20,
+                    color:  const Color.fromRGBO(59, 107, 170, 1),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                    child: 
+                   GestureDetector(
                     onTap: widget.onMenuTap,
                     child: const material.CircleAvatar(
+                      backgroundColor: Color.fromRGBO(59, 107, 170, 1),
+                      foregroundColor: Color.fromRGBO(59, 107, 170, 1),
                       backgroundImage: AssetImage('assets/images/logo.png'),
                     ),
+                  ),
                   ),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: CupertinoTextField(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: material.Colors.white,
-                  boxShadow: const [
-                    BoxShadow(
-                      blurRadius: 25,
-                      offset: Offset(0, 10),
-                      color: Color(0x1A636363),
-                    ),
-                  ]),
-              padding: const EdgeInsets.all(10),
-              style: const TextStyle(
-                  color: Color(0xFF343434),
-                  fontSize: 18,
-                  fontFamily: 'Red Hat Display'),
-              enableInteractiveSelection: true,
-              controller: widget.controller,
-              expands: false,
-              keyboardType: TextInputType.text,
-              suffix: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: Icon(
-                  FontAwesomeIcons.magnifyingGlass,
-                  color: Color(0xFFADADAD),
-                ),
-              ),
-              textInputAction: TextInputAction.search,
-              textCapitalization: TextCapitalization.words,
-              placeholder: "Search",
-              placeholderStyle: const TextStyle(
-                  color: Color(0xFFADADAD),
-                  fontSize: 18,
-                  fontFamily: 'Red Hat Display'),
-            ),
-          ),
+          const SizedBox(height: 20,),
           widget.expanded
               ? 
               Container(
@@ -266,6 +251,10 @@ class _TopBarState extends State<TopBar> {
                 )
         ],
       ),
-    );
+    ):Container(
+      height: MediaQuery.of(context).size.height/1.2,
+      color: Colors.white,
+      child: Center(child: Text("Loading...",
+      style: GoogleFonts.rubikBubbles(fontSize: 34, color:const Color.fromRGBO(59, 107, 170, 1),),)),);
   }
 }

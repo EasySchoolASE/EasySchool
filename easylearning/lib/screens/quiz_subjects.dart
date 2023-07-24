@@ -33,7 +33,7 @@ class _QuizSubjectsState extends State<QuizSubjects> {
               MaterialPageRoute(builder: (context) => QuizApp(subject:index==0?"Math":index==1?"Physics":index==2?"Chemistry":"Biology")));
           }, child: Text(subjects[index],
           style: GoogleFonts.rubikDirt(
-          fontSize: 60, 
+          fontSize: 40, 
           fontWeight: FontWeight.w500, 
           color: Colors.white,
           ),

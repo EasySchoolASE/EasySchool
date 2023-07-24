@@ -37,6 +37,9 @@ class _AddCoursePageState extends State<AddCoursePage> {
   FilePickerResult? file;
   String? fileName;
   String pdfURL="";
+  FilePickerResult? file2;
+  String? fileName2;
+  String pdfURL2="";
   List<String> subjectList=["Math","Physics","Chemistry","Biology"];
   TextStyle textStyleBodyText1 =
     const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, height: 1.3, color: Color.fromRGBO(59, 107, 170, 1),);
@@ -58,6 +61,17 @@ class _AddCoursePageState extends State<AddCoursePage> {
   }
   file = await FilePicker.platform.pickFiles(withData: true,type: FileType.custom, allowedExtensions: ['pdf']);
   fileName = '$randomName.pdf';
+  }
+
+  Future getPdfAndUpload2()  async{
+  var rng = Random();
+  String randomName="";
+  for (var i = 0; i < 20; i++) {
+    print(rng.nextInt(100));
+    randomName += rng.nextInt(100).toString();
+  }
+  file2 = await FilePicker.platform.pickFiles(withData: true,type: FileType.custom, allowedExtensions: ['pdf']);
+  fileName2 = '$randomName.pdf';
   }
  
   
@@ -257,6 +271,32 @@ class _AddCoursePageState extends State<AddCoursePage> {
                ),
           ])
           ),
+           CustomContainer2(
+            child: 
+            Column(children: [
+              Center(child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                Text("ATTACH Quiz PDF",style: textStyleBodyText1,),
+                Text("*",style: textStyleBodyText1.copyWith(color: Colors.red),),
+              ],),),
+               const SizedBox(height: 10,),
+               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  elevation: 0,
+                  backgroundColor: Colors.grey[300]),
+                 onPressed: () async{
+                    await getPdfAndUpload2();
+                    setState(() {
+                      
+                    });
+                  },
+                 child:file2==null
+                     ? const Icon(Icons.add,size: 80,)
+                     : Text(file2!.files.first.path!,textAlign: TextAlign.center,)
+               ),
+          ])
+          ),
            const SizedBox(height: 20,),
            Container(
             height: 45,
@@ -315,7 +355,23 @@ class _AddCoursePageState extends State<AddCoursePage> {
                       //Store the file
                     } catch (error) {
                       //Some error occurred
+                      print("##############pdf 1##############");
+                      print(error);
                       print("#########################");
+                    }
+                  Reference referenceRoot2 = FirebaseStorage.instance.ref();
+                    Reference referenceDirImages2 = referenceRoot2.child('pdfs');
+                    //Create a reference for the image to be stored
+                    Reference referenceImageToUpload2 = referenceDirImages2.child(fileName2!);
+                    //Handle errors/success
+                    try {
+                    // Upload file
+                    await referenceImageToUpload2.putData(file2!.files.first.bytes!);
+                    pdfURL2=await referenceImageToUpload2.getDownloadURL();
+                      //Store the file
+                    } catch (error) {
+                      //Some error occurred
+                      print("#########pdf 2################");
                       print(error);
                       print("#########################");
                     }
@@ -326,6 +382,7 @@ class _AddCoursePageState extends State<AddCoursePage> {
                     'title':titleController.text,
                     'videoLink':videoController.text,
                     'pdfLink':pdfURL,
+                    'quizPdfLink':pdfURL2,
                   });
                   Fluttertoast.showToast(msg: "Video Added Successfully!");
                   durationController.clear();

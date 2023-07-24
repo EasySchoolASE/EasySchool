@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:easylearning/screens/adminLogin.dart';
 import 'package:easylearning/screens/registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -209,9 +210,16 @@ class _LoginScreenState extends State<LoginScreen> {
   void logIn(String email, String password) async {
     if (_formKey.currentState!.validate()) {
       try {
+        DocumentSnapshot<Map<String, dynamic>> snapshot;
+        SharedPreferences sharedPreferences= await SharedPreferences.getInstance();
         await _auth
             .signInWithEmailAndPassword(email: email, password: password)
-            .then((uid) => {
+            .then((uid) async => {
+                  snapshot = await FirebaseFirestore.instance.collection('users').doc(uid.user!.uid.toString()).get(),
+                  await sharedPreferences.setString('userID',uid.user!.uid),
+                  await sharedPreferences.setString('userName',snapshot.data()?['firstName']),
+                  await sharedPreferences.setString('createdAt',uid.user!.metadata.creationTime.toString()),
+                  await sharedPreferences.setString('lastSigned',uid.user!.metadata.lastSignInTime.toString()),
                   Fluttertoast.showToast(msg: "Login Successful"),
                   Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (context) => const HomeScreen())),

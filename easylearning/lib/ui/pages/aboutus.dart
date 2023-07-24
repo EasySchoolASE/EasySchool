@@ -1,6 +1,7 @@
 import 'package:easylearning/ui/widgets/largeCard.dart';
 import 'package:easylearning/ui/widgets/navbar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 
 class AboutUs extends StatefulWidget {
@@ -17,7 +18,7 @@ class _AboutUsState extends State<AboutUs> {
     Scaffold(
       appBar: AppBar(
           backgroundColor: const Color.fromRGBO(59, 107, 170, 1),
-          title: const Text("About us"),
+          title: Text("About us",  style: GoogleFonts.rubikBubbles(color: Colors.white, fontSize: 34, fontWeight: FontWeight.w100),),
           centerTitle: true,
         ),
       drawer: const NavBar(),

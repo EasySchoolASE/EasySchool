@@ -161,7 +161,7 @@ class _TopBarAdminState extends State<TopBarAdmin> {
               )
               : Container(),
                 Container(
-                height: 1024,
+                height: 1200,
                 child:
                  pages[current],
                  ),

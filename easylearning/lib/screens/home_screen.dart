@@ -1,6 +1,7 @@
 import 'package:easylearning/ui/widgets/topBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../Model/UserModel.dart';
 import '../ui/widgets/navbar.dart';
 
@@ -42,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
         drawer:const NavBar(),
         appBar: AppBar(
           backgroundColor: const Color.fromRGBO(59, 107, 170, 1),
-          title: const Text("Welcome"),
+          title: Text("Welcome", style: GoogleFonts.rubikBubbles(color: Colors.white, fontSize: 34, fontWeight: FontWeight.w100),),
           centerTitle: true,
         ),
         body: 
@@ -52,9 +53,6 @@ class _HomeScreenState extends State<HomeScreen> {
         Column(
           children: [
             TopBar(controller: controller, expanded: true, onMenuTap:(){
-              // setState(() {
-              
-              // });
             }),
             ]
             )
@@ -62,79 +60,3 @@ class _HomeScreenState extends State<HomeScreen> {
         );
   }
 }
-
-// class HomePage extends StatelessWidget {
-//   final onMenuTap;
-//   HomePage({
-//     Key? key,
-//     required this.onMenuTap,
-//   }) : super(key: key);
-
-//   TextEditingController controller = TextEditingController();
-//   @override
-//   Widget build(BuildContext context) {
-//     return CupertinoPageScaffold(
-//       backgroundColor: Colors.grey,
-//       child: Stack(
-//         alignment: Alignment.center,
-//         children: <Widget>[
-//           SafeArea(
-//             child: CustomScrollView(
-//               slivers: <Widget>[
-//                 SliverFixedExtentList(
-//                     delegate: SliverChildListDelegate.fixed([Container()]),
-//                     itemExtent: MediaQuery.of(context).size.height * 0.32),
-//                 SliverToBoxAdapter(
-//                   child: SectionHeader(
-//                     text: 'Recommended Lectures',
-//                     onPressed: () {},
-//                   ),
-//                 ),
-//                 SliverToBoxAdapter(
-//                   child: Container(
-//                     width: MediaQuery.of(context).size.width,
-//                     height: 245,
-//                     child: ListView.builder(
-//                       scrollDirection: Axis.horizontal,
-//                       itemCount: 4,
-//                       itemBuilder: (context, index) {
-//                         return const VideoCard(long: false);
-//                       },
-//                     ),
-//                   ),
-//                 ),
-//                 SliverToBoxAdapter(
-//                   child: SectionHeader(
-//                     text: 'Revision Lectures',
-//                     onPressed: () {},
-//                   ),
-//                 ),
-//                 SliverToBoxAdapter(
-//                   child: Container(
-//                     width: MediaQuery.of(context).size.width,
-//                     height: 245,
-//                     child: ListView.builder(
-//                       scrollDirection: Axis.horizontal,
-//                       itemCount: 4,
-//                       itemBuilder: (context, index) {
-//                         return const VideoCard(long: false);
-//                       },
-//                     ),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ),
-//           Positioned(
-//             top: 0,
-//             child: TopBar(
-//               controller: controller,
-//               expanded: true,
-//               onMenuTap: onMenuTap,
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-// }

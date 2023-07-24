@@ -6,8 +6,9 @@ String? videoLink;
 String? photoLink;
 String? title;
 String? pdfURL;
+String? quizPdfURL;
 
-VideoModel({this.duration,this.subject,this.videoLink,this.photoLink,this.title, this.pdfURL});
+VideoModel({this.duration,this.subject,this.videoLink,this.photoLink,this.title, this.pdfURL, this.quizPdfURL});
 
 //getting data from server
 factory VideoModel.fromMap(map){
@@ -17,7 +18,8 @@ factory VideoModel.fromMap(map){
     videoLink: map['videoLink'],
     photoLink: map['photoLink'],
     title: map['title'],
-    pdfURL: map['pdfLink']
+    pdfURL: map['pdfLink'],
+    quizPdfURL: map['quizPdfLink']
   );
 }
 
@@ -30,6 +32,7 @@ Map<String, dynamic> toMap(){
     'photoLink':photoLink,
     'title': title,
     'pdfLink':pdfURL,
+    'quizPdfLink':quizPdfURL,
   };
 }
 

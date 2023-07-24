@@ -8,6 +8,7 @@ import 'package:easylearning/ui/pages/faq.dart';
 import 'package:easylearning/ui/pages/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NavBar extends StatefulWidget {
@@ -18,6 +19,19 @@ class NavBar extends StatefulWidget {
 }
 
 class _NavBarState extends State<NavBar> {
+
+  String userName="";
+  @override
+  void initState() {
+    getUserName();
+    super.initState();
+  }
+  getUserName() async{
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+    userName= sharedPreferences.get('userName').toString();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return 
@@ -30,14 +44,19 @@ class _NavBarState extends State<NavBar> {
           // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
+            DrawerHeader(
+              decoration: const BoxDecoration(
                 color: Colors.blue,
                 image: DecorationImage(
                   image: AssetImage("assets/images/drawer.png"),
                      fit: BoxFit.cover)
               ),
-              child: Text('Hi, User', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 30,color: Colors.white),),
+              child: Text('Hi, ${userName!='null'?userName.toUpperCase():""}', 
+              style: GoogleFonts.rubikBubbles(
+                        color:Colors.white,
+                        fontSize: 34,
+                        fontWeight: FontWeight.w100,
+                  ),),
             ),
             ListTile(
               title: const Text('Home'),

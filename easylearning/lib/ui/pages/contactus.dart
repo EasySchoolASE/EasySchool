@@ -1,5 +1,6 @@
 import 'package:easylearning/ui/widgets/navbar.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_gradient_text/simple_gradient_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -17,7 +18,7 @@ class _ContactUsState extends State<ContactUs> {
     Scaffold(
       appBar: AppBar(
           backgroundColor: const Color.fromRGBO(59, 107, 170, 1),
-          title: const Text("Contact us"),
+          title: Text("Contact us",  style: GoogleFonts.rubikBubbles(color: Colors.white, fontSize: 34, fontWeight: FontWeight.w100),),
           centerTitle: true,
         ),
       drawer: const NavBar(),
@@ -79,7 +80,7 @@ class _ContactUsState extends State<ContactUs> {
                     color: Colors.indigo,
                   ),
                   title: Text(
-                    '+1 (226) 961-8557',
+                    'Give us a call',
                     style: TextStyle(
                         fontFamily: 'Red Hat Display',
                         color:   Colors.blue,
@@ -94,7 +95,7 @@ class _ContactUsState extends State<ContactUs> {
                 elevation: 0,
                 splashColor: Colors.transparent,
                 onPressed: ()async{
-                 String url = "mailto:avinoor@uwindsor.ca";   
+                 String url = "mailto:teameasyschool@gmail.com";   
                   launchUrl(Uri.parse(url));  
               }, child: 
               const Card(
@@ -106,7 +107,7 @@ class _ContactUsState extends State<ContactUs> {
                     color:  Colors.indigo,
                   ),
                   title: Text(
-                    'avinoor@uwindsor.ca',
+                    'teameasyschool@gmail.com',
                     style: TextStyle(
                       fontFamily: 'Red Hat Display',
                       color:   Colors.blue,

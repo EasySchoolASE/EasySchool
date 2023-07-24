@@ -26,14 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // FirebaseFirestore.instance
-    //     .collection("users")
-    //     .doc(user!.uid)
-    //     .get()
-    //     .then((value) {
-    //   loggedInUser = UserModel.fromMap(value.data());
-    //   setState(() {});
-    // });
+   
   }
 
   @override
@@ -59,4 +52,6 @@ class _HomeScreenState extends State<HomeScreen> {
           )
         );
   }
+
 }
+

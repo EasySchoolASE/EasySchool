@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:easylearning/screens/quiz_subjects.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Result extends StatelessWidget {
@@ -11,7 +12,7 @@ final int resultScore;
 final Function resetHandler;
 final String subject;
 
-const Result(this.resultScore, this.resetHandler, this.subject,{Key? key})
+Result(this.resultScore, this.resetHandler, this.subject,{Key? key})
 	: super(key: key);
 
 //Remark Logic
@@ -33,6 +34,8 @@ String get resultPhrase {
 	}
 	return resultText;
 }
+
+bool pressed = false;
 
 @override
 Widget build(BuildContext context) {
@@ -99,6 +102,7 @@ Widget build(BuildContext context) {
     const SizedBox(height: 10,),
     TextButton(
 			onPressed:() async {
+        if(pressed==false){
         final sharedPreferences=await SharedPreferences.getInstance();
         List results=[{
           'score':resultScore,
@@ -115,6 +119,12 @@ Widget build(BuildContext context) {
         }
         else if(data==null){
            sharedPreferences.setString('results', json.encode(results));
+        }
+        pressed=true;
+        Fluttertoast.showToast(msg: "Results saved successfully");
+        }
+        else{
+          Fluttertoast.showToast(msg: "Quiz already saved");
         }
       },
 			child: Container(

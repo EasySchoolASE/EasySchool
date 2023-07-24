@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easylearning/ui/widgets/youtube_player.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../Model/videosModel.dart';
@@ -20,6 +21,7 @@ class _MathsPageState extends State<MathsPage> {
   }
 
   List<VideoModel> list=[];
+  List<String> ids=[];
 
 //function to get data
   void getData() async{
@@ -27,6 +29,7 @@ class _MathsPageState extends State<MathsPage> {
      for(int i=0;i<snapshot.docs.length;i++){
       if(VideoModel.fromMap(snapshot.docs[i].data()).subject=="Math" ){
       list.add(VideoModel.fromMap(snapshot.docs[i].data()));
+      ids.add(snapshot.docs[i].id.toString());
       }
      }
      setState(() {});
@@ -49,7 +52,16 @@ class _MathsPageState extends State<MathsPage> {
                 itemBuilder: (context, index) {
                   return Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child: CardWidget( 
+                  child:
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => YoutubePlayerWidget(
+                          videoUrl: list[index].videoLink.toString(),
+                          id: ids[index].toString())));
+                      },
+                    child:
+                   CardWidget( 
                     gradient: true,
                     button: true,
                     width:  180,
@@ -130,18 +142,12 @@ class _MathsPageState extends State<MathsPage> {
                               ),
                             ),
                             onTap: () {
-                              // Navigator.push(
-                              //   context,
-                              //   CupertinoPageRoute(
-                              //     builder: (context) => VideoPage(),
-                              //   ),
-                              // );
                             },
                           ),
                         ),
                       ],
                     ),
-                  ),
+                  )),
                 );
                 },
               ),

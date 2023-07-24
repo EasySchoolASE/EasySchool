@@ -30,7 +30,7 @@ class _ViewResultsState extends State<ViewResults> {
     SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
     result=json.decode(sharedPreferences.get('results').toString());
     for(int i=0;i<result.length;i++){
-      data.add(QuizData(year:DateFormat('MMM dd, yyyy hh:mm:ss a').format(DateTime.parse(result[i]['time'])), population: result[i]['score']));
+      data.add(QuizData(year:DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.parse(result[i]['time'])), population: result[i]['score']));
     }
     setState(() {
       _getSeriesData();
@@ -75,7 +75,9 @@ void _onSelectionChanged(charts.SelectionModel model) {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Quiz Results'),),
+        centerTitle: true,
+        title: Text('Quiz Results',  style: GoogleFonts.rubikBubbles(color: Colors.white, fontSize: 34, fontWeight: FontWeight.w100),
+        ),),
       drawer: const NavBar(),
       body: result.isNotEmpty?
       ListView(children: [

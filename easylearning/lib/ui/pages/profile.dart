@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easylearning/screens/view_results.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:io';
+import 'package:intl/intl.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import '../widgets/navbar.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -23,6 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   File? image;
   CroppedFile? croppedFile;
+  DocumentSnapshot<Map<String, dynamic>>? snapshot;
   Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -61,556 +66,159 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   @override
+  void initState() {
+    getProfileData();
+    super.initState();
+  }
+
+  String? lastSignInTime;
+  String? createdAt;
+  getProfileData() async {
+    SharedPreferences sharedPreferences=await SharedPreferences.getInstance();
+    String userID = sharedPreferences.get('userID').toString();
+    createdAt=DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.parse(sharedPreferences.get('createdAt').toString()));
+    lastSignInTime=DateFormat('MMM dd, yyyy hh:mm a').format(DateTime.parse(sharedPreferences.get('lastSigned').toString()));
+    snapshot = await FirebaseFirestore.instance.collection('users').doc(userID).get();
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
+    Size mediaQuery = MediaQuery.of(context).size;
     return Scaffold(
         appBar: AppBar(
           backgroundColor: const Color.fromRGBO(59, 107, 170, 1),
-          title: const Text("Profile"),
+          title: Text("Profile", style: GoogleFonts.rubikBubbles(color: Colors.white, fontSize: 34, fontWeight: FontWeight.w100),),
           centerTitle: true,
         ),
         drawer:const NavBar(),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                shadowColor: Colors.black,
-                margin: const EdgeInsets.only(left: 20, right: 20, top: 15),
-                elevation: 5,
-                child: 
-                SizedBox(child:
-                Column(children: [
-                  const Padding(padding: EdgeInsets.all(10)),
-                  const Center(
-                    child: Text(
-                      "Profile",
-                      // style: textStyleHeadline2,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            if(snapshot!=null && snapshot!.data()!=null)...{
+            Container(
+              width: mediaQuery.width,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color.fromRGBO(59, 107, 170, 1),Color.fromARGB(255, 181, 205, 235),],
+                          ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Personal Detail",
-                          // style: textStyleHeadline3.copyWith(
-                          //     fontWeight: FontWeight.normal),
+                    padding: const EdgeInsets.only(top: 24.0),
+                    child:Card(
+                      color: Colors.greenAccent,
+                      elevation: 50,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(60),
+                      ),
+                      child: Container(
+                      width: mediaQuery.width * 0.32,
+                      height: mediaQuery.width * 0.32,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [Color(0xFF3C9FD7), Color(0xFF02396B)],
+                          ),
+                      ),
+                      child:ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                          child: Image.asset(
+                          'assets/images/logo.png',
+                          fit: BoxFit.cover,
+                          // width: 80,
                         ),
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                iconPressed = true;
-                              });
-                            },
-                            icon: const Icon(
-                              Icons.edit_sharp,
-                              color: Colors.blue,
-                              size: 28,
-                            )),
-                      ],
-                    ),
-                  ),
-                  const Divider(
-                    color: Colors.blueGrey,
-                  ),
-                  Center(
-                      child: Stack(children: [
-                    Material(
-                      borderRadius: BorderRadius.circular(100),
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      child: InkWell(
-                        onTap: iconPressed == true
-                            ? () {
-                                pickImage();
-                              }
-                            : () {},
-                        child: image == null
-                            ? Image.network(
-                              "",
-                                // "${Config.imageURL}${signInController.getClientProfile?.userimage}",
-                                height: 60,
-                                width: 60,
-                                fit: BoxFit.cover, errorBuilder:
-                                    (BuildContext? context, Object? exception,
-                                        StackTrace? stackTrace) {
-                                // EasyLoading.dismiss();
-                                return const Image(
-                                    image: AssetImage(
-                                        'assets/images/logo.png'),
-                                    height: 60,
-                                    width: 60,
-                                    fit: BoxFit.cover);
-                              })
-                            : Image.file(
-                                image!,
-                                height: 60,
-                                width: 60,
-                              ),
                       ),
                     ),
-                    if (iconPressed == true) ...{
-                      const Positioned(
-                          bottom: -12,
-                          right: -7,
-                          child: CircleAvatar(
-                            foregroundColor: Colors.grey,
-                            backgroundColor: Colors.white,
-                            child: Icon(
-                              Icons.camera_alt,
-                            ),
-                          )),
-                    }
-                  ])),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.all(10),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              "Full Name",
-                              style: TextStyle(
-                                  fontSize: iconPressed == true ? 18 : 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        if (iconPressed == true) ...{
-                          TextField(
-                            readOnly: true,
-                            controller: fullNameController,
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.all(10),
-                              disabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(width: 1, color: Colors.grey)),
-                              fillColor: Color.fromARGB(255, 212, 208, 208),
-                              hintText: "",
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1,
-                                    color: Color.fromARGB(
-                                        255, 212, 208, 208)), //<-- SEE HERE
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1,
-                                    color: Color.fromARGB(
-                                        255, 212, 208, 208)), //<-- SEE HERE
-                              ),
-                            ),
-                            style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal),
-                            //  controller: emailController,
-                          ),
-                        },
-                        if (iconPressed == false) ...{
-                          Row(children: [
-                            Text(
-                              fullNameController.text,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            )
-                          ])
-                        },
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              "Contact Number",
-                              style: TextStyle(
-                                  fontSize: iconPressed == true ? 18 : 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        if (iconPressed == true) ...{
-                          TextField(
-                            controller: emergencyContactPersonController,
-                            decoration: const InputDecoration(
-                              contentPadding: EdgeInsets.all(10),
-                              disabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(width: 1, color: Colors.grey)),
-                              fillColor: Color.fromARGB(255, 212, 208, 208),
-                              hintText: "Emergency Contact Person",
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1,
-                                    color: Color.fromARGB(
-                                        255, 212, 208, 208)), //<-- SEE HERE
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    width: 1,
-                                    color: Color.fromARGB(
-                                        255, 212, 208, 208)), //<-- SEE HERE
-                              ),
-                            ),
-                            style: const TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
-                                fontWeight: FontWeight.normal),
-                            //  controller: emailController,
-                          ),
-                        },
-                        if (iconPressed == false) ...{
-                          Row(children: [
-                            Text(
-                              emergencyContactPersonController.text,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
-                            )
-                          ])
-                        },
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        if (iconPressed == true) ...{
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                width: 120,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  gradient: const LinearGradient(
-                                    begin: Alignment(-0.95, 0.0),
-                                    end: Alignment(1.0, 0.0),
-                                    colors: [
-                                      Color.fromARGB(173, 57, 54, 54),
-                                      Color.fromARGB(250, 19, 14, 14)
-                                    ],
-                                    stops: [0.0, 1.0],
-                                  ),
-                                ),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(100)),
-                                    ),
-                                    backgroundColor: Colors.transparent,
-                                    disabledForegroundColor:
-                                        Colors.transparent.withOpacity(0.38),
-                                    disabledBackgroundColor:
-                                        Colors.transparent.withOpacity(0.12),
-                                    shadowColor: Colors.transparent,
-                                  ),
-                                  onPressed: () async {
-                                    setState(() {
-                                      iconPressed = false;
-                                    });
-                                  },
-                                  child: const Center(
-                                    child: Text(
-                                      'Cancel',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Color(0xffffffff),
-                                        letterSpacing: -0.3858822937011719,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(100),
-                                  gradient: const LinearGradient(
-                                    begin: Alignment(-0.95, 0.0),
-                                    end: Alignment(1.0, 0.0),
-                                    colors: [
-                                      Color.fromARGB(174, 218, 108, 108),
-                                      Color.fromARGB(251, 236, 85, 85)
-                                    ],
-                                    stops: [0.0, 1.0],
-                                  ),
-                                ),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(100)),
-                                    ),
-                                    backgroundColor: Colors.transparent,
-                                    disabledForegroundColor:
-                                        Colors.transparent.withOpacity(0.38),
-                                    disabledBackgroundColor:
-                                        Colors.transparent.withOpacity(0.12),
-                                    shadowColor: Colors.transparent,
-                                  ),
-                                  onPressed: () async {},
-                                  child: const Center(
-                                    child: Text(
-                                      'Update Profile',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: Color(0xffffffff),
-                                        letterSpacing: -0.3858822937011719,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          )
-                        }
-                      ],
                     ),
                   ),
-                ]),
-              ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15.0),
-                ),
-                shadowColor: Colors.black,
-                margin: const EdgeInsets.only(left: 20, right: 20),
-                elevation: 5,
-                child: Column(children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Text(
-                    "Change Password",
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const Divider(
-                    color: Colors.blueGrey,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.all(10),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 4),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        const Row(
-                          children: [
-                            Text(
-                              "Current Password",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black),
-                            ),
-                            Text(
-                              "*",
-                              style: TextStyle(color: Colors.red, fontSize: 18),
-                            )
-                          ],
-                        ),
-                        const TextField(
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            disabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 1, color: Colors.grey)),
-                            fillColor: Color.fromARGB(255, 212, 208, 208),
-                            hintText: "Current Password",
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: Color.fromARGB(255, 212, 208, 208),
-                              ), //<-- SEE HERE
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 1,
-                                  color: Color.fromARGB(
-                                      255, 212, 208, 208)), //<-- SEE HERE
-                            ),
-                          ),
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal),
-                          //  controller: emailController,
-                          obscureText: true,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        const Row(
-                          children: [
-                            Text(
-                              "New Password",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black),
-                            ),
-                            Text(
-                              "*",
-                              style: TextStyle(color: Colors.red, fontSize: 18),
-                            )
-                          ],
-                        ),
-                        const TextField(
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            disabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 1, color: Colors.grey)),
-                            fillColor: Color.fromARGB(255, 212, 208, 208),
-                            hintText: "New Password",
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: Color.fromARGB(255, 212, 208, 208),
-                              ), //<-- SEE HERE
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 1,
-                                  color: Color.fromARGB(
-                                      255, 212, 208, 208)), //<-- SEE HERE
-                            ),
-                          ),
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal),
-                          //  controller: emailController,
-                          obscureText: true,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        const Row(
-                          children: [
-                            Text(
-                              "Confirm Password",
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.black),
-                            ),
-                            Text(
-                              "*",
-                              style: TextStyle(color: Colors.red, fontSize: 18),
-                            )
-                          ],
-                        ),
-                        const TextField(
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.all(10),
-                            disabledBorder: OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(width: 1, color: Colors.grey)),
-                            fillColor: Color.fromARGB(255, 212, 208, 208),
-                            hintText: "Confirm Password",
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: Color.fromARGB(255, 212, 208, 208),
-                              ), //<-- SEE HERE
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 1,
-                                  color: Color.fromARGB(
-                                      255, 212, 208, 208)), //<-- SEE HERE
-                            ),
-                          ),
-                          style: TextStyle(
-                              fontSize: 14,
-                              color: Colors.black,
-                              fontWeight: FontWeight.normal),
-                          //  controller: emailController,
-                          obscureText: true,
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        Align(
-                          child: SizedBox(
-                            width: 180,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                gradient: const LinearGradient(
-                                  begin: Alignment(-0.95, 0.0),
-                                  end: Alignment(1.0, 0.0),
-                                  colors: [
-                                    Color.fromARGB(174, 218, 108, 108),
-                                    Color.fromARGB(251, 236, 85, 85)
-                                  ],
-                                  stops: [0.0, 1.0],
-                                ),
-                              ),
-                              child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  shape: const RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(100)),
-                                  ),
-                                  backgroundColor: Colors.transparent,
-                                  disabledForegroundColor:
-                                      Colors.transparent.withOpacity(0.38),
-                                  disabledBackgroundColor:
-                                      Colors.transparent.withOpacity(0.12),
-                                  shadowColor: Colors.transparent,
-                                ),
-                                onPressed: () async {},
-                                child: const Center(
-                                  child: Text(
-                                    'Update Password',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Color(0xffffffff),
-                                      letterSpacing: -0.3858822937011719,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                            ),
+                        Text(
+                          ("${snapshot!.data()!=null?snapshot!.data()!['firstName']:""}").trim().toUpperCase(),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18,
+                            color:Colors.white,
+                            letterSpacing: 0.15,
                           ),
                         ),
                       ],
                     ),
-                  ),
-                ]),
-              ),
-            ],
-           )
-          )
-        );
+                  ),])),
+                  Container(
+                    margin: const EdgeInsets.all(20),
+                    child: 
+                  Column(children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                    const Text("First Name :  ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color.fromRGBO(59, 107, 170, 1),overflow: TextOverflow.ellipsis),),
+                    Text("${snapshot!.data()!=null?snapshot!.data()!['firstName']:""}", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color.fromRGBO(59, 107, 170, 1),overflow: TextOverflow.ellipsis))
+                  ],),
+                  const SizedBox(height: 10,),
+                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                    const Text("Second Name : ",style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color.fromRGBO(59, 107, 170, 1),overflow: TextOverflow.ellipsis)),
+                    Text("${snapshot!.data()!=null?snapshot!.data()!['secondName']:""}", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color.fromRGBO(59, 107, 170, 1),overflow: TextOverflow.ellipsis))
+                  ],),
+                  const SizedBox(height: 10,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                    const Text("Email : ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color.fromRGBO(59, 107, 170, 1),overflow: TextOverflow.ellipsis)),
+                    Text("${snapshot!.data()!=null?snapshot!.data()!['email']:""}", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color.fromRGBO(59, 107, 170, 1),overflow: TextOverflow.ellipsis))
+                  ],),
+                  const SizedBox(height: 10,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                    const Text("Last Signed In :  ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color.fromRGBO(59, 107, 170, 1),overflow: TextOverflow.ellipsis)),
+                    Text("${snapshot!.data()!=null?lastSignInTime:""}", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color.fromRGBO(59, 107, 170, 1),overflow: TextOverflow.ellipsis))
+                  ],),
+                  const SizedBox(height: 10,),
+                   Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                    const Text("Profile Created At :  ", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color.fromRGBO(59, 107, 170, 1),overflow: TextOverflow.ellipsis)),
+                    Text("${snapshot!.data()!=null?createdAt:""}", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Color.fromRGBO(59, 107, 170, 1),overflow: TextOverflow.ellipsis))
+                  ],),
+                  const SizedBox(height: 20,),
+                  TextButton(
+                      onPressed:() async{
+                       Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (context) => const ViewResults()));
+                      },
+                      child: Container(
+                      color: const Color.fromRGBO(59, 107, 170, 1),
+                      padding: const EdgeInsets.all(14),
+                      child: const Text(
+                        'View Quiz Results',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      ),
+                    ),
+                  ]),),
+            } else...{
+              Container(
+                height: MediaQuery.of(context).size.height/1.2,
+                color: Colors.white,
+                child: Center(child: Text("Loading...",
+                style: GoogleFonts.rubikBubbles(fontSize: 34, color:const Color.fromRGBO(59, 107, 170, 1),),)),)
+            }
+            ]));
   }
 }

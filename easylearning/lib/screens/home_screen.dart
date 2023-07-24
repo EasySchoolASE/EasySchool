@@ -1,6 +1,7 @@
 import 'package:easylearning/ui/widgets/topBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../Model/UserModel.dart';
 import '../ui/widgets/navbar.dart';
 
@@ -35,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
         drawer:const NavBar(),
         appBar: AppBar(
           backgroundColor: const Color.fromRGBO(59, 107, 170, 1),
-          title: const Text("Welcome"),
+          title: Text("Welcome", style: GoogleFonts.rubikBubbles(color: Colors.white, fontSize: 34, fontWeight: FontWeight.w100),),
           centerTitle: true,
         ),
         body: 
@@ -45,13 +46,12 @@ class _HomeScreenState extends State<HomeScreen> {
         Column(
           children: [
             TopBar(controller: controller, expanded: true, onMenuTap:(){
-              // setState(() {
-              
-              // });
             }),
             ]
             )
           )
         );
   }
+
 }
+

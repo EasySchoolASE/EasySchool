@@ -10,6 +10,7 @@ class FAQPage extends StatefulWidget {
 }
 
 //This is FAQ Page
+
 class _FAQPageState extends State<FAQPage> {
   @override
   Widget build(BuildContext context) {
@@ -19,6 +20,7 @@ class _FAQPageState extends State<FAQPage> {
           title: const Text("FAQ"),
           centerTitle: true,
         ),
+        //FAQ code is done
         drawer: const NavBar(),
         body: Column(
             mainAxisAlignment: MainAxisAlignment.start,
